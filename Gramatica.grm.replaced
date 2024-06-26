@@ -1,0 +1,347 @@
+﻿"Start Symbol" = <algoritmo>
+           
+! Terminais
+! O GOLD Parser automaticamente considera terminais que são subconjuntos de outro terminal como exceções às combinações possíveis para o terminal do qual são subconjuntos.
+! Por exemplo, mesmo que (verdadeiro) possa ser considerado IDE devido à regra (verdadeiro = 'verdadeiro'), sempre que (verdadeiro) aparecer, este será considerado como "verdadeiro".
+NROpositivo = {Digit}+('.'{Digit}+)?
+caractere = '"'{simbolo}'"'
+CAC = '"'{simbolo}*'"'
+IDE = {Letter}{corpoidentificador}*
+
+! Regra para números reais (positivos ou negativos, inteiros ou fracionários)
+! NRO positivo é a mesma coisa de NRO do analisador léxico
+<NRO> ::= - NROpositivo
+       | NROpositivo
+       
+! Regra que define como os identificadores podem aparecer em expressões
+<IDEvetoroucompostoouchamada> ::= IDE <vetoroucompostoouchamada>
+                      
+! Recursão de vetor ou composto (não possui ordem de prioridade exceto associatividade da esquerda para a direita)
+<vetoroucompostoouchamada> ::= [ <expressaonumerica> ] <vetoroucompostoouchamada>
+                   | . IDE <vetoroucompostoouchamada>
+                   | ( <listagemparametros> ) <vetoroucompostoouchamada>
+                   | <>
+       
+! Como é formada uma expressão booleana (valor booleano simples ou resultado de uma ou mais operações lógicas entre múltiplos valores booleanos)
+! Segue a ordem de prioridade de operações (NOT) > (AND) > (OR), representada de forma ascendente nas sucessivas produções a seguir.
+! Nível mais alto: Expressão OR
+<expressaobooleana> ::= <expressaoAND> <operacaoOR>
+                     
+! Não-terminal de operação OR, necessário para termos fatoração à esquerda
+<operacaoOR> ::= || <expressaobooleana>
+              | <>
+              
+! Nível intermediário 2: Expressão AND
+<expressaoAND> ::= <expressaoNOT> <operacaoAND>
+                
+! Não-terminal de operação AND, necessário para termos fatoração à esquerda
+<operacaoAND> ::= && <expressaoAND>
+               | <>
+               
+! Nível intermediário 1: Expressão NOT
+<expressaoNOT> ::= ! <parcelabooleana>
+                | <parcelabooleana>
+                
+! Nível mais baixo: definição da parcela (valor booleano ou expressão booleana entre parênteses)
+<parcelabooleana> ::= <valorbooleano>
+                   | ( <expressaobooleana> )
+                   
+! Valores que podem representar booleanas
+<valorbooleano> ::= verdadeiro
+                 | falso
+                 | <IDEvetoroucompostoouchamada>
+                 
+
+
+! Como é formada uma expressão numérica (valor numérico simples ou resultado de uma ou mais operações aritméticas entre múltiplos valores numéricos)
+! Segue a ordem de prioridade de operações (*ou/) > (+ou-), representada de forma ascendente nas sucessivas produções a seguir.
+! Nível mais alto: Expressão de Adição/Subtração
+<expressaonumerica> ::= <expressaoMD> <operacaoAS>
+                     
+! Não-terminal de operação Adição/Subtração, necessário para termos fatoração à esquerda
+<operacaoAS> ::= + <expressaonumerica>
+                | - <expressaonumerica>
+                | <>
+                
+! Nível intermediário: Expressão de multiplicação ou divisão
+<expressaoMD> ::= <parcelanumerica> <operacaoMD>
+               
+! Não-terminal de operação Multiplicação/Divisão, necessário para termos fatoração à esquerda
+<operacaoMD> ::= * <expressaoMD>
+                | / <expressaoMD>
+                | <>
+                
+! Nível mais baixo: definição da parcela (valor numérico ou expressão numérica entre parênteses)
+<parcelanumerica> ::= <valornumerico>
+           | ( <expressaonumerica> )
+           
+! Valores que podem representar números
+<valornumerico> ::= <NRO>
+                 | <IDEvetoroucompostoouchamada>
+                 
+
+
+! Estrutura que permite declarar uma constante e atribuir valor booleano a um ou mais identificador(es)
+<declaracaobooleana> ::= booleano IDE = <expressaobooleana> <listagemconstantebooleana> ;
+                      
+! Ferramenta recursiva para listar declarações de expressões booleanas
+<listagemconstantebooleana> ::= , IDE = <expressaobooleana> <listagemconstantebooleana>
+                             | <>
+                             
+! Estrutura que permite declarar uma constante e atribuir valor numérico a um ou mais identificador(es)
+<declaracaonumerica> ::= inteiro IDE = <expressaonumerica> <listagemconstantenumerica> ;
+                      | real IDE = <expressaonumerica> <listagemconstantenumerica> ;
+                      
+! Ferramenta recursiva para listar declarações de expressões aritméticas
+<listagemconstantenumerica> ::= , IDE = <expressaonumerica> <listagemconstantenumerica>
+                             | <>
+                              
+! Estrutura que permite declarar uma constante e atribuir valor de string a um ou mais identificador(es)
+<declaracaodecadeia> ::= cadeia IDE = <CACoucaractere> <listagemconstantedecadeia> ;
+                      
+! Cadeia de caracteres ou caractere individual, necessário pois o GOLD considera caracteres individuais como exceção aos terminais feitos com mais de um caractere (strings com comprimento maior que 1)
+<CACoucaractere> ::= CAC
+                  | caractere
+                      
+! Ferramenta recursiva para listar declarações de strings
+<listagemconstantedecadeia> ::= , IDE = <CACoucaractere> <listagemconstantedecadeia>
+                             | <>
+
+! Estrutura que permite declarar uma constante e atribuir valor de caractere individual a um ou mais identificador(es)
+<declaracaodecaractere> ::= char IDE = caractere <listagemconstantedecaractere> ;
+                      
+! Ferramenta recursiva para listar declarações de caracteres individuais
+<listagemconstantedecaractere> ::= , IDE = caractere <listagemconstantedecaractere>
+                             | <>
+                             
+! Estrutura que permite declarar constantes de qualquer tipo
+<declaracaodeconstante> ::= <declaracaobooleana>
+                         | <declaracaonumerica>
+                         | <declaracaodecadeia>
+                         | <declaracaodecaractere>
+                         
+! Bloco de declaração de constantes (constantes {<declaracao1> <declaracao2> [...] <declaracaon-1> <declaracaon>})
+<blocodeconstantes> ::= constantes { <listagemblococonstantes> }
+                     
+! Ferramenta recursiva para listar declarações de constantes
+<listagemblococonstantes> ::= <declaracaodeconstante> <listagemblococonstantes>
+                           | <>
+                         
+
+
+! Estrutura que permite declarar variáveis de qualquer tipo
+! Vetores de quaisquer número de dimensões são considerados sempre variáveis, portanto são declarados apenas aqui (e não em constantes)
+! O tipo pode ser IDE (pois pode ser um tipo composto criado pelo programador, também)
+<declaracaodevariavel> ::= IDE <IDEvetor> <listagemdeidentificador> ;
+                        | booleano <IDEvetor> <listagemdeidentificador> ;
+                        | inteiro <IDEvetor> <listagemdeidentificador> ;
+                        | real <IDEvetor> <listagemdeidentificador> ;
+                        | char <IDEvetor> <listagemdeidentificador> ;
+                        | cadeia <IDEvetor> <listagemdeidentificador> ;
+                        
+! IDE simples ou vetor de n dimensões
+<IDEvetor> ::= IDE <vetor>
+            
+! Estrutura que permite definir a dimensão de uma variável (0-valor simples, 1-vetor, 2-matriz, etc)
+<vetor> ::= [ <expressaonumerica> ] <vetor>
+                  | <>
+                  
+! Ferramenta recursiva para listar identificadores com opção de declarar dimensões
+<listagemdeidentificador> ::= , <IDEvetor> <listagemdeidentificador>
+                           | <>
+                           
+! Bloco de declaração de variáveis (variaveis {<declaracao1> <declaracao2> [...] <declaracaon-1> <declaracaon>})
+<blocodevariaveis> ::= variaveis { <listagemblocovariaveis> }
+                     
+! Ferramenta recursiva para listar declarações de variáveis
+<listagemblocovariaveis> ::= <declaracaodevariavel> <listagemblocovariaveis>
+                          | <>
+                          
+
+! Declaração da criação de tipo composto
+<blocoderegistro> ::= registro IDE { <listagemblocovariaveis> }
+                          
+
+! Estrutura que permite reatribuir valores a variáveis
+! Corpo da reatribuição (usado mais à frente para a decisão entre declaração de tipo composto e reatribuição)
+<reatribuicao> ::= IDE <reatribuicaosimplesouvetoroucomposto> ;
+                
+! Estrutura que permite acessar diversos níveis de vetor da variável (versão para reatribuição de variável)
+! Note que a estrutura se repete até chegar ao sinal de igual, e só então a expressão é associada à produção que veio antes dela, permitindo resgatar o contexto das variáveis.
+! Desta forma, o compilador poderá realizar a reatribuição baseada na saída do parser (Ex: 0 nível = variável simples, 1 nível = lista, 2 níveis = matriz, etc)
+<reatribuicaosimplesouvetoroucomposto> ::= [ <expressaonumerica> ] <reatribuicaosimplesouvetoroucomposto>
+                              | . IDE <reatribuicaosimplesouvetoroucomposto>
+                              | = <expressaogeral>
+
+
+
+! Listagem de parâmetros na chamada da função                
+<listagemparametros> ::= <expressaogeral> <maisparametros>
+                        | <>
+
+! Caso exista um parâmetro, podem existir mais, separados por vírgula                        
+<maisparametros> ::= , <expressaogeral> <maisparametros>
+                    | <>
+
+! Instrução de retorno
+<retorno> ::= retorno <valorretorno> ;
+
+! Retorno: valor ou vazio          
+<valorretorno> ::= <expressaogeral>
+                |  <>
+
+! Comando de escreva que funciona como uma função, só que com o nome fixo de "escreva"
+<escreva> ::= escreva ( <listagemparametros> ) ;
+           
+
+! Comando de Leia que só recebe Identificador, Vetores, Matrizes e tipo composto
+<leia> ::= leia ( <listagemleia> ) ;
+
+! Comando obriga o uso de ao menos um parâmetro        
+<listagemleia> ::= <IDEvetoroucompostoouchamada> <maisparametrosleia>
+
+! Demais parâmetros possíveis para o comando "leia"                
+<maisparametrosleia> ::= , <IDEvetoroucompostoouchamada> <maisparametrosleia>
+                      | <>
+                       
+
+! Estruturas de Algoritmo, Corpo, Escopo e Bloco:
+<algoritmo> ::= algoritmo { <corpo> }
+
+! Corpo, delimita a estrutura do código contido no bloco principal ("algoritmo")
+! Constantes e variáveis são opcionais (mas devem ser declaradas nesta ordem); Abaixo, pode ser verificada a possibilidade de existir ou não o bloco de declaração de constantes
+<corpo> ::= <blocodeconstantes> <corpovariaveis>
+          |  <corpovariaveis>
+
+! Opção para existir ou não o bloco de variáveis          
+<corpovariaveis> ::= <blocodevariaveis> <corpocomposto>
+                  |  <corpocomposto>
+
+! Listagem de registros seguida da listagem de funções                  
+<corpocomposto> ::= <listagemderegistro> <listagemdefuncoes>
+
+! Listagem de registros (tamanho 0 ou maior)
+<listagemderegistro> ::= <blocoderegistro> <listagemderegistro>
+                      | <>
+                      
+! Listagem de funções (tamanho 0 ou maior)
+! A função principal é obrigatória e deve seguir as demais; assim sendo, após o tipo de retorno, decidimos se é função principal ou ordinária de acordo com possuir IDE ou 'principal' como nome
+<listagemdefuncoes> ::= <tiposretorno> <funcaoouprincipal>
+                     
+! Funções ordinárias (IDE como nome) devem ser seguidas de outra função, enquanto função principal ('principal' como nome) não deve ser seguida de função alguma
+<funcaoouprincipal> ::= <funcaoordinaria> <listagemdefuncoes>
+                     | <funcaoprincipal>
+                   
+
+
+<escopo> ::= <blocodeconstantes> <escopovariaveis>
+          |  <escopovariaveis>
+          
+<escopovariaveis> ::= <blocodevariaveis> <bloco> <retorno>
+                   |  <bloco> <retorno>
+
+<bloco> ::= <se> <bloco> 
+         |  <enquanto> <bloco>
+         |  <leia> <bloco>
+         |  <escreva> <bloco>
+         |  <reatribuicao> <bloco>
+         |  <>
+
+
+          
+
+         
+! Estrutura do se e senão
+<se> ::= se ( <expressaogeral> ) { <bloco> } <senao>
+
+<senao> ::= senao { <bloco> }
+            | <> 
+
+! Estrutura do enquanto
+<enquanto> ::= enquanto ( <expressaogeral> ) { <bloco> }
+
+! Estrutura de uma função
+! <funcao> ::= <tiposretorno> IDE ( <listagemdeclaracaoparametros> ) { <escopo> }
+          
+! Função ordinária (nome é IDE)
+<funcaoordinaria> ::= IDE ( <listagemdeclaracaoparametros> ) { <escopo> }
+
+! Função principal (nome é 'principal')
+<funcaoprincipal> ::= principal ( <listagemdeclaracaoparametros> ) { <escopo> }
+          
+<listagemdeclaracaoparametros> ::= <tipos> <IDEvetor> <maisdeclaracaoparametros>
+                                | <>
+      
+<maisdeclaracaoparametros> ::= , <tipos> <IDEvetor> <maisdeclaracaoparametros>
+                            |  <>
+
+<tipos> ::= booleano
+          | inteiro
+          | real
+          | char
+          | cadeia
+          | IDE
+
+<tiposretorno> ::= <tipos>
+                | vazio
+                
+
+
+! Expressão geral, utilizada em reatribuição
+! Segue a
+! ordem de prioridade de operação (*ou/) > (+ou-) > (NOT) > (AND) > (OR), representada de forma ascendente nas sucessivas produções a seguir.
+! Nível 6, expressão OR (início da árvore de derivação)
+<expressaogeral> ::= <expressaoANDgeral> <operacaoORgeral>
+                  
+! Não-terminal de operação OR geral, necessário para termos fatoração à esquerda
+<operacaoORgeral> ::= || <expressaogeral>
+                   | <>
+                   
+! Nível 5, expressão AND geral
+<expressaoANDgeral> ::= <expressaoRELgeral> <operacaoANDgeral>
+                     
+! Não-terminal de operação OR geral, necessário para termos fatoração à esquerda
+<operacaoANDgeral> ::= && <expressaoANDgeral>
+                    | <>
+                   
+                     
+! Nível 4, expressão relacional geral
+<expressaoRELgeral> ::= <expressaoNOTgeral> <operacaoRELgeral>
+
+! Não-terminal de operação relacional, necessário para termos fatoração à esquerda       
+<operacaoRELgeral> ::= == <expressaoNOTgeral>
+                        | != <expressaoNOTgeral>
+                        | > <expressaoNOTgeral>
+                        | < <expressaoNOTgeral>
+                        | >= <expressaoNOTgeral>
+                        | <= <expressaoNOTgeral>
+                        | <>
+                        
+! Nível 3, expressão NOT geral
+<expressaoNOTgeral> ::= ! <parcelabooleana>
+                     | <expressaoASgeral>
+
+! Nível 2, expressão de adição/soma geral
+<expressaoASgeral> ::= <expressaoMDgeral> <operacaoASgeral>
+
+! Não-terminal de operação adição/subtração geral, necessário para termos fatoração à esquerda
+<operacaoASgeral> ::= + <expressaonumerica>
+                   | - <expressaonumerica>
+                   | <>
+                   
+! Nível 1, expressão multiplicação/divisão geral
+<expressaoMDgeral> ::= <parcelageral> <operacaoMDgeral>
+                    
+! Não-terminal de operação multiplicação/divisão geral, necessário para termos fatoração à esquerda
+<operacaoMDgeral> ::= * <expressaoMD>
+                   | / <expressaoMD>
+                   | <>
+                   
+! Nível 0, parcela de valor geral                   
+<parcelageral> ::= <IDEvetoroucompostoouchamada>
+                | verdadeiro
+                | falso
+                | <NRO>
+                | CAC
+                | caractere
+                | ( <expressaogeral> )

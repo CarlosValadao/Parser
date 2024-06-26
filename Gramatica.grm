@@ -1,0 +1,175 @@
+﻿"Start Symbol" = <algoritmo>
+           
+NROpositivo = {Digit}+('.'{Digit}+)?
+caractere = '"'{simbolo}'"'
+CAC = '"'{simbolo}*'"'
+IDE = {Letter}{corpoidentificador}*
+<NRO> ::= - NROpositivo | NROpositivo
+       
+<IDEvetoroucompostoouchamada> ::= IDE <vetoroucompostoouchamada>
+                      
+<vetoroucompostoouchamada> ::= [ <expressaonumerica> ] <vetoroucompostoouchamada>
+                   | . IDE <vetoroucompostoouchamada>
+                   | ( <listagemparametros> ) <vetoroucompostoouchamada>
+                   | <>
+       
+<expressaobooleana> ::= <expressaoAND> <operacaoOR>
+                     
+<operacaoOR> ::= || <expressaobooleana> | <>
+              
+<expressaoAND> ::= <expressaoNOT> <operacaoAND>
+                
+<operacaoAND> ::= && <expressaoAND> | <>
+               
+<expressaoNOT> ::= ! <parcelabooleana> | <parcelabooleana>
+                
+<parcelabooleana> ::= <valorbooleano> | ( <expressaobooleana> )
+                   
+<valorbooleano> ::= verdadeiro | falso | <IDEvetoroucompostoouchamada>
+                 
+<expressaonumerica> ::= <expressaoMD> <operacaoAS>
+                     
+<operacaoAS> ::= + <expressaonumerica> | - <expressaonumerica> | <>
+                
+<expressaoMD> ::= <parcelanumerica> <operacaoMD>
+               
+<operacaoMD> ::= * <expressaoMD> | / <expressaoMD> | <>
+                
+<parcelanumerica> ::= <valornumerico> | ( <expressaonumerica> )
+           
+<valornumerico> ::= <NRO> | <IDEvetoroucompostoouchamada>
+<declaracaobooleana> ::= booleano IDE = <expressaobooleana> <listagemconstantebooleana> ;
+                      
+<listagemconstantebooleana> ::= , IDE = <expressaobooleana> <listagemconstantebooleana> | <>
+                             
+<declaracaonumerica> ::= inteiro IDE = <expressaonumerica> <listagemconstantenumerica> ;
+                      | real IDE = <expressaonumerica> <listagemconstantenumerica> ;
+                      
+<listagemconstantenumerica> ::= , IDE = <expressaonumerica> <listagemconstantenumerica> | <>
+                              
+<declaracaodecadeia> ::= cadeia IDE = <CACoucaractere> <listagemconstantedecadeia> ;
+                      
+<CACoucaractere> ::= CAC | caractere
+                      
+<listagemconstantedecadeia> ::= , IDE = <CACoucaractere> <listagemconstantedecadeia> | <>
+<declaracaodecaractere> ::= char IDE = caractere <listagemconstantedecaractere> ;
+                      
+<listagemconstantedecaractere> ::= , IDE = caractere <listagemconstantedecaractere> | <>
+                             
+<declaracaodeconstante> ::= <declaracaobooleana>                     
+                         | <declaracaonumerica>
+                         | <declaracaodecadeia>
+                         | <declaracaodecaractere>
+                         
+<blocodeconstantes> ::= constantes { <listagemblococonstantes> }
+                     
+<listagemblococonstantes> ::= <declaracaodeconstante> <listagemblococonstantes> | <>
+                         
+<declaracaodevariavel> ::= IDE <IDEvetor> <listagemdeidentificador> ;
+                        | booleano <IDEvetor> <listagemdeidentificador> ;
+                        | inteiro <IDEvetor> <listagemdeidentificador> ;
+                        | real <IDEvetor> <listagemdeidentificador> ;
+                        | char <IDEvetor> <listagemdeidentificador> ;
+                        | cadeia <IDEvetor> <listagemdeidentificador> ;
+                        
+<IDEvetor> ::= IDE <vetor>
+            
+<vetor> ::= [ <expressaonumerica> ] <vetor> | <>
+         
+<listagemdeidentificador> ::= , <IDEvetor> <listagemdeidentificador> | <>
+                           
+<blocodevariaveis> ::= variaveis { <listagemblocovariaveis> }
+                     
+<listagemblocovariaveis> ::= <declaracaodevariavel> <listagemblocovariaveis> | <>
+<blocoderegistro> ::= registro IDE { <listagemblocovariaveis> }
+                          
+<reatribuicao> ::= IDE <reatribuicaosimplesouvetoroucomposto> ;
+                
+<reatribuicaosimplesouvetoroucomposto> ::= [ <expressaonumerica> ] <reatribuicaosimplesouvetoroucomposto>
+                              | . IDE <reatribuicaosimplesouvetoroucomposto>
+                              | = <expressaogeral>
+<listagemparametros> ::= <expressaogeral> <maisparametros> | <>
+<maisparametros> ::= , <expressaogeral> <maisparametros> | <>
+                  
+<retorno> ::= retorno <valorretorno> ;
+<valorretorno> ::= <expressaogeral> |  <>
+<escreva> ::= escreva ( <listagemparametros> ) ;
+    
+<leia> ::= leia ( <listagemleia> ) ;
+<listagemleia> ::= <IDEvetoroucompostoouchamada> <maisparametrosleia>
+<maisparametrosleia> ::= , <IDEvetoroucompostoouchamada> <maisparametrosleia> | <>
+                       
+<algoritmo> ::= algoritmo { <corpo> }
+<corpo> ::= <blocodeconstantes> <corpovariaveis> | <corpovariaveis>
+<corpovariaveis> ::= <blocodevariaveis> <corpocomposto> | <corpocomposto>
+<corpocomposto> ::= <listagemderegistro> <listagemdefuncoes>
+<listagemderegistro> ::= <blocoderegistro> <listagemderegistro> | <>
+                      
+<listagemdefuncoes> ::= <tiposretorno> <funcaoouprincipal>
+                     
+<funcaoouprincipal> ::= <funcaoordinaria> <listagemdefuncoes> | <funcaoprincipal>
+                   
+<escopo> ::= <blocodeconstantes> <escopovariaveis> | <escopovariaveis>
+          
+<escopovariaveis> ::= <blocodevariaveis> <bloco> <retorno> | <bloco> <retorno>
+<bloco> ::= <se> <bloco> 
+         |  <enquanto> <bloco>
+         |  <leia> <bloco>
+         |  <escreva> <bloco>
+         |  <reatribuicao> <bloco>
+         |  <>
+         
+<se> ::= se ( <expressaogeral> ) { <bloco> } <senao>
+<senao> ::= senao { <bloco> } | <> 
+<enquanto> ::= enquanto ( <expressaogeral> ) { <bloco> }
+      
+<funcaoordinaria> ::= IDE ( <listagemdeclaracaoparametros> ) { <escopo> }
+<funcaoprincipal> ::= principal ( <listagemdeclaracaoparametros> ) { <escopo> }
+          
+<listagemdeclaracaoparametros> ::= <tipos> <IDEvetor> <maisdeclaracaoparametros> | <>  
+                                
+<maisdeclaracaoparametros> ::= , <tipos> <IDEvetor> <maisdeclaracaoparametros> | <>
+                            
+<tipos> ::= booleano
+          | inteiro
+          | real
+          | char
+          | cadeia
+          | IDE
+<tiposretorno> ::= <tipos> | vazio            
+<expressaogeral> ::= <expressaoANDgeral> <operacaoORgeral>
+                  
+<operacaoORgeral> ::= || <expressaogeral> | <>
+                   
+<expressaoANDgeral> ::= <expressaoRELgeral> <operacaoANDgeral>
+                     
+<operacaoANDgeral> ::= && <expressaoANDgeral> | <>
+                     
+<expressaoRELgeral> ::= <expressaoNOTgeral> <operacaoRELgeral>
+<operacaoRELgeral> ::= == <expressaoNOTgeral>
+                        | != <expressaoNOTgeral>
+                        | > <expressaoNOTgeral>
+                        | < <expressaoNOTgeral>
+                        | >= <expressaoNOTgeral>
+                        | <= <expressaoNOTgeral>
+                        | <>
+                        
+<expressaoNOTgeral> ::= ! <parcelabooleana> | <expressaoASgeral>
+<expressaoASgeral> ::= <expressaoMDgeral> <operacaoASgeral>
+<operacaoASgeral> ::= + <expressaonumerica>
+                   | - <expressaonumerica>
+                   | <>
+                   
+<expressaoMDgeral> ::= <parcelageral> <operacaoMDgeral>
+                    
+<operacaoMDgeral> ::= * <expressaoMD>
+                   | / <expressaoMD>
+                   | <>
+                   
+<parcelageral> ::= <IDEvetoroucompostoouchamada>
+                | verdadeiro
+                | falso
+                | <NRO>
+                | CAC
+                | caractere
+                | ( <expressaogeral> )
