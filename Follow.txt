@@ -1,4 +1,81 @@
 Follow(NRO) = { $ }
+Follow(IDEvetoroucompostoouchamada) = { '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*', '/', ',', ')', ']', ';', '.' }
+Follow(vetoroucompostoouchamada) = { '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*', '/', ',', ')', ']', ';', '.' }
+Follow(expressaobooleana) = { ',', ';', ')' }
+Follow(operacaoOR) = { ',', ';', ')' }
+Follow(expressaoAND) = { '||', ',', ';', ')' }
+Follow(operacaoAND) = { '||', ',', ';', ')' }
+Follow(expressaoNOT) = { '&&', '||', ',', ';', ')' }
+Follow(parcelabooleana) = { '&&', '||', ',', ';', ')' }
+Follow(valorbooleano) = { '&&', '||', ',', ';', ')' }
+Follow(expressaonumerica) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*' , '/' }
+Follow(operacaoAS) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-' }
+Follow(expressaoMD) = { '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(operacaoMD) = { '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(parcelanumerica) = { '*', '/', '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(valornumerico) = { '*', '/', '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(declaracaobooleana) = { '}', }
+Follow(listagemconstantebooleana) = { ';' }
+Follow(declaracaonumerica) = { '}' }
+Follow(listagemconstantenumerica) = { ';' }
+Follow(declaracaodecadeia) = { '}' }
+Follow(CACoucaractere) = { ',', ';' }
+Follow(listagemconstantedecadeia) = { ';' }
+Follow(declaracaodecaractere) = { '}' }
+Follow(listagemconstantedecaractere) = { ';' }
+Follow(declaracaodeconstante) = { '}', ';' }
+Follow(blocodeconstantes) = { 'variaveis', 'registro', '}', 'algoritmo' }
+Follow(listagemblococonstantes) = { '}' }
+Follow(declaracaodevariavel) = { '}' }
+Follow(IDEvetor) = { ',', ';' }
+Follow(vetor) = { ',', ';' }
+Follow(listagemdeidentificador) = { ';' }
+Follow(blocodevariaveis) = { 'registro', '}', 'algoritmo' }
+Follow(listagemblocovariaveis) = { '}' }
+Follow(blocoderegistro) = { '}' }
+Follow(reatribuicao) = { '}' }
+Follow(reatribuicaosimplesouvetoroucomposto) = { '}', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*', '/', ',', ';', ')' }
+Follow(listagemparametros) = { ')' }
+Follow(maisparametros) = { ')' }
+Follow(retorno) = { '}' }
+Follow(valorretorno) = { ';' }
+Follow(escreva) = { '}' }
+Follow(leia) = { '}' }
+Follow(listagemleia) = { ')' }
+Follow(maisparametrosleia) = { ')' }
+Follow(algoritmo) = { $ }
+Follow(corpo) = { $ }
+Follow(corpovariaveis) = { '}' }
+Follow(corpocomposto) = { '}' }
+Follow(listagemderegistro) = { '}' }
+Follow(listagemdefuncoes) = { '}', 'vazio', 'booleano', 'inteiro', 'real', 'char', 'cadeia', 'IDE' }
+Follow(funcaoouprincipal) = { '}', 'vazio', 'booleano', 'inteiro', 'real', 'char', 'cadeia', 'IDE' }
+Follow(escopo) = { '}' }
+Follow(escopovariaveis) = { '}' }
+Follow(bloco) = { '}', 'senao' }
+Follow(se) = { '}', 'senao' }
+Follow(senao) = { '}' }
+Follow(enquanto) = { '}' }
+Follow(funcaoordinaria) = { '}', 'vazio', 'booleano', 'inteiro', 'real', 'char', 'cadeia', 'IDE' }
+Follow(funcaoprincipal) = { '}' }
+Follow(listagemdeclaracaoparametros) = { ')' }
+Follow(maisdeclaracaoparametros) = { ')' }
+Follow(tipos) = { 'IDE' }
+Follow(tiposretorno) = { 'IDE' }
+Follow(expressaogeral) = { '}', '||', ',', ';', ')', ']' }
+Follow(operacaoORgeral) = { '}', ',', ';', ')' }
+Follow(expressaoANDgeral) = { '||', ',', ';', ')' }
+Follow(operacaoANDgeral) = { '||', ',', ';', ')' }
+Follow(expressaoRELgeral) = { '&&', '||', ',', ';', ')' }
+Follow(operacaoRELgeral) = { '&&', '||', ',', ';', ')' }
+Follow(expressaoNOTgeral) = { '&&', '||', ',', ';', ')' }
+Follow(expressaoASgeral) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+' , '-' }
+Follow(operacaoASgeral) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(expressaoMDgeral) = { '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(operacaoMDgeral) = { '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(parcelageral) = { '*', '/', '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+
+Follow(NRO) = { $ }
 Follow(IDEvetoroucompostoouchamada) = {  }
 Follow(vetoroucompostoouchamada)
 Follow(expressaobooleana)
