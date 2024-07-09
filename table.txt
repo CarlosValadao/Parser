@@ -332,3 +332,14 @@ _PARSER_ANALYSIS_TABLE['parcelageral', 'NROpositivo'] = [ 'NRO' ]
 _PARSER_ANALYSIS_TABLE['parcelageral', 'CAC'] = [ 'CAC' ]
 _PARSER_ANALYSIS_TABLE['parcelageral', 'caractere'] = [ 'caractere' ]
 _PARSER_ANALYSIS_TABLE['parcelageral', '('] = [ '(', 'expressaogeral', ')' ]
+
+
+
+_PARSER_ANALYSIS_TABLE['vetoroucompostoouchamada'] = [ '[', ']', '.', '(', ')' ]
+_PARSER_ANALYSIS_TABLE['operacaoAS'] = [ '+', '-']
+_PARSER_ANALYSIS_TABLE['operacaoMD'] = [ '*', '/']
+_PARSER_ANALYSIS_TABLE['listagemconstantebooleana'] = [ 'verdadeiro', 'falso']
+_PARSER_ANALYSIS_TABLE['listagemconstantenumerica'] = [ 'NROpositivo' ]
+_PARSER_ANALYSIS_TABLE['listagemconstantedecadeia'] = [ 'CAC' ]
+_PARSER_ANALYSIS_TABLE['listagemconstantedecaractere'] = [ 'caractere' ]
+_PARSER_ANALYSIS_TABLE['operacaoMDgeral'] = [ '*', '/', '%' ]
