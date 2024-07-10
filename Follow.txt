@@ -1,4 +1,4 @@
-Follow(NRO) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*', '/' }
+Follow(NRO) = { '*', '/', '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
 Follow(IDEvetoroucompostoouchamada) = { '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*', '/', ',', ')', ']', ';', '.' }
 Follow(vetoroucompostoouchamada) = { '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*', '/', ',', ')', ']', ';', '.' }
 Follow(expressaobooleana) = { ',', ';', ')' }
@@ -6,148 +6,71 @@ Follow(operacaoOR) = { ',', ';', ')' }
 Follow(expressaoAND) = { '||', ',', ';', ')' }
 Follow(operacaoAND) = { '||', ',', ';', ')' }
 Follow(expressaoNOT) = { '&&', '||', ',', ';', ')' }
-Follow(parcelabooleana) = { '&&', '||', ',', ';', ')' }
-Follow(valorbooleano) = { '&&', '||', ',', ';', ')' }
-Follow(expressaonumerica) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*' , '/' }
-Follow(operacaoAS) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-' }
-Follow(expressaoMD) = { '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
-Follow(operacaoMD) = { '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(parcelabooleana) = { '==', '!=', '>', '<', '>=', '<=', '&&', '||', ',', ';', ')' }
+Follow(valorbooleano) = { '==', '!=', '>', '<', '>=', '<=', '&&', '||', ',', ';', ')' }
+Follow(expressaonumerica) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-' }
+Follow(operacaoAS) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
+Follow(expressaoMD) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-' }
+Follow(operacaoMD) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-' }
 Follow(parcelanumerica) = { '*', '/', '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
 Follow(valornumerico) = { '*', '/', '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
-Follow(declaracaobooleana) = { '}', }
+Follow(declaracaobooleana) = { 'booleano', 'inteiro', 'real', 'cadeia', 'char', '}' }
 Follow(listagemconstantebooleana) = { ';' }
-Follow(declaracaonumerica) = { '}' }
+Follow(declaracaonumerica) = { 'booleano', 'inteiro', 'real', 'cadeia', 'char', '}' }
 Follow(listagemconstantenumerica) = { ';' }
-Follow(declaracaodecadeia) = { '}' }
+Follow(declaracaodecadeia) = { 'booleano', 'inteiro', 'real', 'cadeia', 'char', '}' }
 Follow(CACoucaractere) = { ',', ';' }
 Follow(listagemconstantedecadeia) = { ';' }
-Follow(declaracaodecaractere) = { '}' }
+Follow(declaracaodecaractere) = { 'booleano', 'inteiro', 'real', 'cadeia', 'char', '}' }
 Follow(listagemconstantedecaractere) = { ';' }
-Follow(declaracaodeconstante) = { '}', ';' }
-Follow(blocodeconstantes) = { 'variaveis', 'registro', '}', 'algoritmo' }
+Follow(declaracaodeconstante) = { 'booleano', 'inteiro', 'real', 'cadeia', 'char', '}' }
+Follow(blocodeconstantes) = { 'variaveis', 'se', 'enquanto', 'leia', 'escreva', 'IDE', 'retorno', 'registro', 'booleano', 'inteiro', 'real', 'char', 'cadeia', 'vazio', '}' }
 Follow(listagemblococonstantes) = { '}' }
-Follow(declaracaodevariavel) = { '}' }
-Follow(IDEvetor) = { ',', ';' }
-Follow(vetor) = { ',', ';' }
-Follow(listagemdeidentificador) = { ';' }
-Follow(blocodevariaveis) = { 'registro', '}', 'algoritmo' }
+Follow(declaracaodevariavel) = { 'IDE', 'booleano', 'inteiro', 'real', 'char', 'cadeia', '}' }
+Follow(IDEvetor) = { ',', ';', ')' }
+Follow(vetor) = { ',', ';', ')' }
+Follow(listagemdeidentificador) = { 'IDE', 'booleano', 'inteiro', 'real', 'char', 'cadeia', '}', ';' }
+Follow(blocodevariaveis) = { 'registro', 'booleano', 'inteiro', 'real', 'char', 'cadeia', 'IDE', 'vazio', '}', 'retorno' }
 Follow(listagemblocovariaveis) = { '}' }
-Follow(blocoderegistro) = { '}' }
-Follow(reatribuicao) = { '}' }
-Follow(reatribuicaosimplesouvetoroucomposto) = { '}', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+', '-', '*', '/', ',', ';', ')' }
+Follow(blocoderegistro) = { 'registro', '}' }
+Follow(reatribuicao) = { 'se', 'enquanto', 'leia', 'escreva', 'IDE', '}', 'retorno' }
+Follow(reatribuicaosimplesouvetoroucomposto) = { ';' }
 Follow(listagemparametros) = { ')' }
 Follow(maisparametros) = { ')' }
 Follow(retorno) = { '}' }
 Follow(valorretorno) = { ';' }
-Follow(escreva) = { '}' }
-Follow(leia) = { '}' }
+Follow(escreva) = { 'se', 'enquanto', 'leia', 'escreva', 'IDE', '}', 'retorno' }
+Follow(leia) = { 'se', 'enquanto', 'leia', 'escreva', 'IDE', '}', 'retorno' }
 Follow(listagemleia) = { ')' }
 Follow(maisparametrosleia) = { ')' }
 Follow(algoritmo) = { $ }
-Follow(corpo) = { $ }
+Follow(corpo) = { '}' }
 Follow(corpovariaveis) = { '}' }
 Follow(corpocomposto) = { '}' }
-Follow(listagemderegistro) = { '}' }
-Follow(listagemdefuncoes) = { '}', 'vazio', 'booleano', 'inteiro', 'real', 'char', 'cadeia', 'IDE' }
-Follow(funcaoouprincipal) = { '}', 'vazio', 'booleano', 'inteiro', 'real', 'char', 'cadeia', 'IDE' }
+Follow(listagemderegistro) = { 'booleano', 'inteiro', 'real', 'char', 'cadeia' 'IDE', 'vazio',  }
+Follow(listagemdefuncoes) = { '}' }
+Follow(funcaoouprincipal) = { '}' }
 Follow(escopo) = { '}' }
 Follow(escopovariaveis) = { '}' }
-Follow(bloco) = { '}', 'senao' }
-Follow(se) = { '}', 'senao' }
-Follow(senao) = { '}' }
-Follow(enquanto) = { '}' }
+Follow(bloco) = { '}', 'retorno' }
+Follow(se) = { 'se', 'enquanto', 'leia', 'escreva', 'IDE', '}', 'retorno' }
+Follow(senao) = { 'se', 'enquanto', 'leia', 'escreva', 'IDE', '}', 'retorno' }
+Follow(enquanto) = { 'se', 'enquanto', 'leia', 'escreva', 'IDE', '}', 'retorno' }
 Follow(funcaoordinaria) = { '}', 'vazio', 'booleano', 'inteiro', 'real', 'char', 'cadeia', 'IDE' }
 Follow(funcaoprincipal) = { '}' }
 Follow(listagemdeclaracaoparametros) = { ')' }
 Follow(maisdeclaracaoparametros) = { ')' }
-Follow(tipos) = { 'IDE' }
-Follow(tiposretorno) = { 'IDE' }
-Follow(expressaogeral) = { '}', '||', ',', ';', ')', ']' }
-Follow(operacaoORgeral) = { '}', ',', ';', ')' }
+Follow(tipos) = { 'IDE', 'principal' }
+Follow(tiposretorno) = { 'IDE', 'principal' }
+Follow(expressaogeral) = { ',', ';', ')' }
+Follow(operacaoORgeral) = { ',', ';', ')' }
 Follow(expressaoANDgeral) = { '||', ',', ';', ')' }
 Follow(operacaoANDgeral) = { '||', ',', ';', ')' }
 Follow(expressaoRELgeral) = { '&&', '||', ',', ';', ')' }
 Follow(operacaoRELgeral) = { '&&', '||', ',', ';', ')' }
-Follow(expressaoNOTgeral) = { '&&', '||', ',', ';', ')' }
-Follow(expressaoASgeral) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=', '+' , '-' }
-Follow(operacaoASgeral) = { ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
-Follow(expressaoMDgeral) = { '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
-Follow(operacaoMDgeral) = { '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
-Follow(parcelageral) = { '*', '/', '+', '-', ',', ';', ')', ']', '||', '&&', '==', '!=', '>', '<', '>=', '<=' }
-
-Follow(NRO) = { $ }
-Follow(IDEvetoroucompostoouchamada) = {  }
-Follow(vetoroucompostoouchamada)
-Follow(expressaobooleana)
-Follow(operacaoOR)
-Follow(expressaoAND)
-Follow(operacaoAND)
-Follow(expressaoNOT)
-Follow(parcelabooleana)
-Follow(valorbooleano)
-Follow(expressaonumerica)
-Follow(operacaoAS)
-Follow(expressaoMD)
-Follow(operacaoMD)
-Follow(parcelanumerica) = {  '*', '/', λ <- (expressaoMD) }
-Follow(valornumerico)
-Follow(declaracaobooleana)
-Follow(listagemconstantebooleana)
-Follow(declaracaonumerica)
-Follow(listagemconstantenumerica)
-Follow(declaracaodecadeia)
-Follow(CACoucaractere)
-Follow(listagemconstantedecadeia)
-Follow(declaracaodecaractere)
-Follow(listagemconstantedecaractere)
-Follow(declaracaodeconstante)
-Follow(blocodeconstantes)
-Follow(listagemblococonstantes)
-Follow(declaracaodevariavel)
-Follow(IDEvetor)
-Follow(vetor)
-Follow(listagemdeidentificador)
-Follow(blocodevariaveis)
-Follow(listagemblocovariaveis)
-Follow(blocoderegistro)
-Follow(reatribuicao)
-Follow(reatribuicaosimplesouvetoroucomposto)
-Follow(listagemparametros)
-Follow(maisparametros)
-Follow(retorno)
-Follow(valorretorno)
-Follow(escreva)
-Follow(leia)
-Follow(listagemleia)
-Follow(maisparametrosleia)
-Follow(algoritmo) = { $ }
-Follow(corpo)
-Follow(corpovariaveis)
-Follow(corpocomposto)
-Follow(listagemderegistro)
-Follow(listagemdefuncoes)
-Follow(funcaoouprincipal)
-Follow(escopo)
-Follow(escopovariaveis)
-Follow(bloco)
-Follow(se) = {  }
-Follow(senao)
-Follow(enquanto)
-Follow(funcaoordinaria)
-Follow(funcaoprincipal)
-Follow(listagemdeclaracaoparametros)
-Follow(maisdeclaracaoparametros)
-Follow(tipos)
-Follow(tiposretorno)
-Follow(expressaogeral)
-Follow(operacaoORgeral)
-Follow(expressaoANDgeral)
-Follow(operacaoANDgeral)
-Follow(expressaoRELgeral)
-Follow(operacaoRELgeral)
-Follow(expressaoNOTgeral)
-Follow(expressaoASgeral)
-Follow(operacaoASgeral) = {  }
-Follow(expressaoMDgeral) = { '+', '-', λ <- (expressaoASgeral) }
-Follow(operacaoMDgeral) = { <- (expressaoMDgeral) }
-Follow(parcelageral) = { '*', '/', λ <- (expressaoMDgeral) }
+Follow(expressaoNOTgeral) = { '==', '!=', '>', '<', '>=', '<=', '&&', '||', ',', ';', ')' }
+Follow(expressaoASgeral) = { '==', '!=', '>', '<', '>=', '<=', '&&', '||', ',', ';', ')' }
+Follow(operacaoASgeral) = { '==', '!=', '>', '<', '>=', '<=', '&&', '||', ',', ';', ')' }
+Follow(expressaoMDgeral) = { '+', '-','==', '!=', '>', '<', '>=', '<=', '&&', '||', ',', ';', ')' }
+Follow(operacaoMDgeral) = { '+', '-','==', '!=', '>', '<', '>=', '<=', '&&', '||', ',', ';', ')' }
+Follow(parcelageral) = { '*', '/', '+', '-','==', '!=', '>', '<', '>=', '<=', '&&', '||', ',', ';', ')' }
