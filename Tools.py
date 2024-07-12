@@ -1,6 +1,6 @@
 import constants
 from sys import exit
-from os import path, listdir, mkdir, chdir
+from os import path, listdir, mkdir, chdir, rename, remove, path
 from typing import Iterable
 from types import MappingProxyType
 
@@ -12,15 +12,17 @@ def identify_token(token:str) -> str:
     return token if id_token else constants.UNKNOWN_TOKEN
 
 # Get all of the files that ends with .txt
-def get_input_filenames(rpath:str = '.') -> list[str]:
+def get_input_filenames(not_endswith: str, rpath:str = '.') -> tuple[str]:
     filenames = listdir(rpath)
-    is_text_file = lambda filename: filename[-4:] == '.txt'
-    input_filenames = list(filter(is_text_file, filenames))
+    size_not_endswith = len(not_endswith) + 4
+    not_endswith = f'{not_endswith}.txt'
+    is_text_file = lambda filename: filename[-size_not_endswith:] != not_endswith
+    input_filenames = tuple(filter(is_text_file, filenames))
     return input_filenames
 
-def generate_output_filenames(filenames: list[str]|str, sufix: str) -> list[str]:
+def generate_output_filenames(filenames: tuple[str]|str, sufix: str) -> tuple[str]:
     rename_file = lambda filename: filename[0:-4] + f'{sufix}.txt'
-    output_filenames = list(map(rename_file, filenames))
+    output_filenames = tuple(map(rename_file, filenames))
     return output_filenames
 
 def dir_exists(dir_path:str) -> bool:
@@ -56,6 +58,36 @@ def endswithnewline(obj: list[str]) -> bool:
 
 # Recebe um dicionario e verifica
 # e retorna as chaves do dicionário
-# que contém value
-def values_with_key_substring(dictionary: MappingProxyType, value: str) -> list[str]:
-    return [ key[1] for key in dictionary if value in key ]
+# que contém value, em forma de tupla
+def values_with_key_substring(dictionary: MappingProxyType, value: str) -> tuple[str]:
+    return tuple([ key[1] for key in dictionary if value in key ])
+
+def write_file(fpath: str, data: list[list[str]], mode: str) -> None:
+    lines = [ line for tokens in data for line in tokens ] 
+    fp = open(fpath, mode)
+    fp.writelines(lines)
+    fp.close()
+
+def write_files(f_paths: tuple[str], data: list[list[list[str]]], mode: str) -> None:
+    for i in range(len(f_paths)):
+        write_file(f_paths[i], data[i], mode)
+
+# renomeia um arquivo ou um conjunto de arquivos
+# levando em consideracao o diretorio de trabalho atual, apenas
+# claro, ambas as listas devem ter o mesmo tamanho
+# nao faz verificacao de erro
+def rename_files(old: list[str], new: list[str]) -> None:
+    for k in range(len(old)):
+        if old[k] != new[k]:
+            rename(old[k], new[k])
+    # genexp
+    # (rename(old_item, new_item) for old_item, new_item in zip(old, new))
+    
+def remove_files(files: tuple[str]) -> None:
+    
+    for file in files:
+        if path.exists(file):
+            remove(file)
+        else:
+            print("Não existem arquivos de saída!")
+            return
