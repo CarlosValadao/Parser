@@ -20,8 +20,12 @@ import Tools
 # A cada linha lida, os tokens serao gravados no arquivo de saida
 
 
+# Nao deve ser fornecida para o scanner uma lista vazia de arquivos
+# de entrada, senao o algoritmo todo quebra
 class LexcialScanner:
-    def __init__(self, infiles: list[str], outfiles:list[str]) -> None:
+    def __init__(self, infiles: tuple[str]) -> None:
+        self._n_input_files: int = len(infiles)
+        self._EOIF: bool = False
         self.loaded_files: list[list[str]] = []
         self.__cabeca: int = 0
         self.__numero_linha: int = 1
@@ -29,10 +33,10 @@ class LexcialScanner:
         # self.__EOF: bool = False
         # self.__EOL: bool = False
         self.__first_CoM_ocurrence_line = -1
-        self.__file_id: int = 0
-        self.__infiles: list[str] = infiles
-        self.__current_input_file: TextIO = open(infiles[self.__file_id], 'r')
-        self._increment_file_id()
+        self._file_counter: int = 0
+        self.__infiles: tuple[str] = infiles
+        self.__current_input_file: TextIO = open(self.__infiles[self._file_counter], 'r')
+        self._increment_file_counter()
         # list_temp = list(self.__current_file.readline())
         # self.__empty_file: bool = False
         # if not list_temp:
@@ -54,24 +58,53 @@ class LexcialScanner:
         self.__right_tokens: list[str] = []
         self.__wrong_tokens:list[str] = []
         # self.__outfiles: list[str] = outfiles if outfiles is not None else self._get_outputfiles_names(infiles)
-        self.__outfiles: list[str] = outfiles
+        # self.__outfiles: list[str] = outfiles
         self.__last_token:str = constants.UNKNOWN_TOKEN
+        self._output: dict[str, list[list[str]]] = dict()
 
     def run(self) -> None:
-        if self.__empty_file:
-            print('Arquivo vazio')
-            return
-        else:
-            while not self.__EOF:
-                print("FITA -> ", self.__fita)
-                while self._q0():
-                    pass
-                self._set_next_line_current_file()
-            print(self.__right_tokens)
-            print(self.__wrong_tokens)
-            self._write_tokens_in_respective_outfile()
-        self.__current_input_file.close()
+        while not self._EOIF:
+            if self.__empty_file:
+                print('Arquivo vazio')
+            else:
+                while not self.__EOF:
+                    print("FITA -> ", self.__fita)
+                    while self._q0():
+                        pass
+                    self._set_next_line_current_file()
+                print(self.__right_tokens)
+                print(self.__wrong_tokens)
+                self._write_tokens_in_respective_outfile()
+            self.__current_input_file.close()
+            self._output[self.__infiles[self._file_counter-1]] = [ self.__right_tokens,
+                                                                  self.__wrong_tokens 
+                                                                ]
+            self._set_new_curr_file()
+        print(self._EOIF)
+        print(self._output)
+        self.handle_output()
+        # return self._output
         
+    # Formata o conjunto de strings
+    # a serem retornadas pelo
+    # analisador lexico
+    def handle_output(self) -> None:
+        for key in self._output:
+            right_tokens = self._output[key][0]
+            has_wrong_tokens = len(self._output[key][1]) > 0
+            right_tokens.append(constants.EOI_RIGHT_TOKENS)
+            if right_tokens:
+                if has_wrong_tokens:
+                    right_tokens[-1] += '\n'
+                else:
+                    right_tokens.append('Sucesso!\n')
+        print("TA PASSANDO AQUI?")
+        print(right_tokens)
+            
+    def get_tokens(self) -> dict[str, list[list[str]]]:    
+        return self._output
+    
+    
     def _set_next_line_current_file(self) -> None:
         # self.__fita = list(self.__current_file.readline())
         self.__fita = self.__get_line_from_curr_infile()
@@ -112,29 +145,32 @@ class LexcialScanner:
         print(self.loaded_files[0])
         print(self.loaded_files[1])
     
-    def exec(self, input_files:list[str], output_files: list[str]) -> None:
-        size_files = len(input_files)
-        for k in range(size_files):
-            self._set_new_curr_file(input_files[k], [output_files[k]])
-            self.run()
+    # def exec(self, input_files:list[str], output_files: list[str]) -> None:
+    #     size_files = len(input_files)
+    #     for k in range(size_files):
+    #         self._set_new_curr_file(input_files[k], [output_files[k]])
+    #         self.run()
     
-    def _set_new_curr_file(self, input_file: str, outfilename: list[str]) -> None:
+    def _set_new_curr_file(self) -> None:
         # self._increment_file_id()
-        self.__current_input_file = open(input_file, 'r')
-        self.__fita = self.__get_line_from_curr_infile()
-        self.__empty_file = Tools.is_empty_text_file(self.__current_input_file.fileno())
-        self.__EOL = self.__empty_file
-        self.__EOF = self.__empty_file
-        self.__size_fita = len(self.__fita)
-        self.__lexema = ''
-        self.__cabeca = 0
-        self.__numero_linha = 1
-        self.__right_tokens = []
-        self.__wrong_tokens = []
-        self.__scanning_block_comment = False
-        self.__first_CoM_ocurrence_line = -1
-        self.__last_token = constants.UNKNOWN_TOKEN
-        self.__outfiles = outfilename
+        if 0 < self._file_counter < self._n_input_files:
+            self.__current_input_file = open(self.__infiles[self._file_counter], 'r')
+            self._file_counter += 1
+            self.__fita = self.__get_line_from_curr_infile()
+            self.__empty_file = Tools.is_empty_text_file(self.__current_input_file.fileno())
+            self.__EOL = self.__empty_file
+            self.__EOF = self.__empty_file
+            self.__size_fita = len(self.__fita)
+            self.__lexema = ''
+            self.__cabeca = 0
+            self.__numero_linha = 1
+            self.__right_tokens = []
+            self.__wrong_tokens = []
+            self.__scanning_block_comment = False
+            self.__first_CoM_ocurrence_line = -1
+            self.__last_token = constants.UNKNOWN_TOKEN
+        else:
+            self._EOIF = True
 
     def __get_line_from_curr_infile(self) -> list[str]:
         file_line = list(self.__current_input_file.readline())
@@ -157,18 +193,20 @@ class LexcialScanner:
     #     return new_filename
 
     def _write_tokens_in_respective_outfile(self) -> None:
-        print("OUTPUT FILENAMES-> ", self.__outfiles)
-        fp = open(self.__outfiles[self.__file_id-1], 'w')
-        fp.writelines(self.__right_tokens)
-        fp.write(constants.EOI_RIGHT_TOKENS)
-        if not self.__wrong_tokens:
-            fp.write('Sucesso!\n')
-            fp.close()
-            return
-        else:
-            fp.write('\n')
-        fp.writelines(self.__wrong_tokens)
-        fp.close()
+        # print("OUTPUT FILENAMES-> ", self.__outfiles)
+        # fp = open(self.__outfiles[self._file_counter-1], 'w')
+        # fp.writelines(self.__right_tokens)
+        # fp.write(constants.EOI_RIGHT_TOKENS)
+        # if not self.__wrong_tokens:
+        #     fp.write('Sucesso!\n')
+        #     fp.close()
+        #     return
+        # else:
+        #     fp.write('\n')
+        # fp.writelines(self.__wrong_tokens)
+        # fp.close()
+        print(self._output)
+        
         # self.__current_file.close()
     # Gera um token no seguinte formato:
     # LINHA TIPO_TOKEN LEXEMA, por ex:
@@ -183,8 +221,8 @@ class LexcialScanner:
     def _set_eof(self) -> None:
         pass
 
-    def _increment_file_id(self) -> None:
-        self.__file_id += 1
+    def _increment_file_counter(self) -> None:
+        self._file_counter += 1
 
     def _update_eol(self) -> None:
         self.__EOL = self.__cabeca >= self.__size_fita
@@ -238,7 +276,7 @@ class LexcialScanner:
         self.__cabeca -= value
 
     def _update_file_id(self) -> None:
-        self.__file_id += 1
+        self._file_counter += 1
 
     def _update_head(self) -> None:
         self.__cabeca += 1
@@ -495,7 +533,9 @@ class LexcialScanner:
         self._set_last_token(token=token)
         
     def _CAC(self) -> None:
-        token_type = "CAC"
+        print("LEXEMA EM CAC -> ", self.__lexema)
+        print("LEN LEXEMA EM CAC ->", len(self.__lexema))
+        token_type = "CAC" if len(self.__lexema) > 3 else "CHAR"
         self._handle_token(token_type, wrong_token=False)
     
     def _CMF(self) -> None:
@@ -674,7 +714,7 @@ class LexcialScanner:
     def _q18(self) -> None:
         char = self._get_next_char()
         if char == '+':
-            self.__lexema += char
+            # self.__lexema += char
             self._ART()
         else:
             self._decrement_head()
@@ -691,7 +731,7 @@ class LexcialScanner:
             self._decrement_head()
             self._ART()
         elif char == '-':
-            self.__lexema += char
+            # self.__lexema += char
             self._ART()
         elif type_last_token == 'IDE' or type_last_token == 'IMF':
             self._decrement_head()
