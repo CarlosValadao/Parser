@@ -20,5 +20,8 @@ class Token:
         return self._line_number
     
     def get_ftoken(self) -> str:
-        return self.f_token
+        return f'{self._line_number} {self._token_type} {self._lexeme}'
+    
+    def set_lexeme(self, lexeme:str) -> None:
+        self._lexeme = lexeme
     
