@@ -1,0 +1,25 @@
+algoritmo{
+    
+    constantes {
+        real gravidade = 9.7803;
+    }
+    
+    registro aeronave {
+        inteiro numeroDeMotores, assentos, tripulacao, numeroDeDispositivosDePouso, dispositivosAuxiliares[20];
+        real comprimentoTotal, larguraMaxima; 
+        real impulsoMaximo, empuxoMaximo, sustentacaoMaxima;
+        cadeia coeficienteAerodinamico;
+        real velocidadeMaxima, velocidadeDeCruzeiro, pesoVazio, pesoMaximoDeDecolagem;
+        real potenciaEletrica, fluxoDeAr;
+        aeronave desenvolvidoDe, desenvolvidoEm, modelosSimilares[12];
+    }
+    
+    principal (){
+        
+        variaveis {
+            aeronave aeroplano[534], helicoptero[7+12/3+1*(4+2)], quadcoptero[8], balao[22];
+        }
+        
+        retorno;
+    }
+}
